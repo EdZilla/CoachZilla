@@ -1,11 +1,11 @@
-package com.summitbid.coachzilla.fitness
+package com.summitbid.coachzilla.nutrition
 
 import grails.test.mixin.*
 import spock.lang.*
 
-@TestFor(ExerciseController)
-@Mock(Exercise)
-class ExerciseControllerSpec extends Specification {
+@TestFor(FoodController)
+@Mock(Food)
+class FoodControllerSpec extends Specification {
 
     def populateValidParams(params) {
         assert params != null
@@ -19,8 +19,8 @@ class ExerciseControllerSpec extends Specification {
             controller.index()
 
         then:"The model is correct"
-            !model.exerciseList
-            model.exerciseCount == 0
+            !model.foodList
+            model.foodCount == 0
     }
 
     void "Test the create action returns the correct model"() {
@@ -28,7 +28,7 @@ class ExerciseControllerSpec extends Specification {
             controller.create()
 
         then:"The model is correctly created"
-            model.exercise!= null
+            model.food!= null
     }
 
     void "Test the save action correctly persists an instance"() {
@@ -36,25 +36,25 @@ class ExerciseControllerSpec extends Specification {
         when:"The save action is executed with an invalid instance"
             request.contentType = FORM_CONTENT_TYPE
             request.method = 'POST'
-            def exercise = new Exercise()
-            exercise.validate()
-            controller.save(exercise)
+            def food = new Food()
+            food.validate()
+            controller.save(food)
 
         then:"The create view is rendered again with the correct model"
-            model.exercise!= null
+            model.food!= null
             view == 'create'
 
         when:"The save action is executed with a valid instance"
             response.reset()
             populateValidParams(params)
-            exercise = new Exercise(params)
+            food = new Food(params)
 
-            controller.save(exercise)
+            controller.save(food)
 
         then:"A redirect is issued to the show action"
-            response.redirectedUrl == '/exercise/show/1'
+            response.redirectedUrl == '/food/show/1'
             controller.flash.message != null
-            Exercise.count() == 1
+            Food.count() == 1
     }
 
     void "Test that the show action returns the correct model"() {
@@ -66,11 +66,11 @@ class ExerciseControllerSpec extends Specification {
 
         when:"A domain instance is passed to the show action"
             populateValidParams(params)
-            def exercise = new Exercise(params)
-            controller.show(exercise)
+            def food = new Food(params)
+            controller.show(food)
 
         then:"A model is populated containing the domain instance"
-            model.exercise == exercise
+            model.food == food
     }
 
     void "Test that the edit action returns the correct model"() {
@@ -82,11 +82,11 @@ class ExerciseControllerSpec extends Specification {
 
         when:"A domain instance is passed to the edit action"
             populateValidParams(params)
-            def exercise = new Exercise(params)
-            controller.edit(exercise)
+            def food = new Food(params)
+            controller.edit(food)
 
         then:"A model is populated containing the domain instance"
-            model.exercise == exercise
+            model.food == food
     }
 
     void "Test the update action performs an update on a valid domain instance"() {
@@ -96,28 +96,28 @@ class ExerciseControllerSpec extends Specification {
             controller.update(null)
 
         then:"A 404 error is returned"
-            response.redirectedUrl == '/exercise/index'
+            response.redirectedUrl == '/food/index'
             flash.message != null
 
         when:"An invalid domain instance is passed to the update action"
             response.reset()
-            def exercise = new Exercise()
-            exercise.validate()
-            controller.update(exercise)
+            def food = new Food()
+            food.validate()
+            controller.update(food)
 
         then:"The edit view is rendered again with the invalid instance"
             view == 'edit'
-            model.exercise == exercise
+            model.food == food
 
         when:"A valid domain instance is passed to the update action"
             response.reset()
             populateValidParams(params)
-            exercise = new Exercise(params).save(flush: true)
-            controller.update(exercise)
+            food = new Food(params).save(flush: true)
+            controller.update(food)
 
         then:"A redirect is issued to the show action"
-            exercise != null
-            response.redirectedUrl == "/exercise/show/$exercise.id"
+            food != null
+            response.redirectedUrl == "/food/show/$food.id"
             flash.message != null
     }
 
@@ -128,23 +128,23 @@ class ExerciseControllerSpec extends Specification {
             controller.delete(null)
 
         then:"A 404 is returned"
-            response.redirectedUrl == '/exercise/index'
+            response.redirectedUrl == '/food/index'
             flash.message != null
 
         when:"A domain instance is created"
             response.reset()
             populateValidParams(params)
-            def exercise = new Exercise(params).save(flush: true)
+            def food = new Food(params).save(flush: true)
 
         then:"It exists"
-            Exercise.count() == 1
+            Food.count() == 1
 
         when:"The domain instance is passed to the delete action"
-            controller.delete(exercise)
+            controller.delete(food)
 
         then:"The instance is deleted"
-            Exercise.count() == 0
-            response.redirectedUrl == '/exercise/index'
+            Food.count() == 0
+            response.redirectedUrl == '/food/index'
             flash.message != null
     }
 }
